@@ -1,5 +1,5 @@
 const clientId = 'YOUR_CLIENT_ID';
-const redirectUri = 'https://yourusername.github.io/your-repo-name/callback.html';
+const redirectUri = 'https://badkarmasyts.github.io/TypeGame/';
 const scopes = 'user-read-private playlist-read-private streaming user-read-playback-state user-modify-playback-state';
 
 const loginButton = document.getElementById('login');
