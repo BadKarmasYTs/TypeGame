@@ -25,6 +25,7 @@ loginButton.onclick = () => {
 
 async function fetchSpotify(endpoint) {
   const token = localStorage.getItem("spotify_token");
+  if (!token) return;
   const res = await fetch(`https://api.spotify.com/v1/${endpoint}`, {
     headers: { Authorization: `Bearer ${token}` }
   });
@@ -33,6 +34,7 @@ async function fetchSpotify(endpoint) {
 
 window.onSpotifyWebPlaybackSDKReady = () => {
   const token = localStorage.getItem("spotify_token");
+  if (!token) return;
   player = new Spotify.Player({
     name: 'Typing Game Player',
     getOAuthToken: cb => { cb(token); },
@@ -92,6 +94,9 @@ startGameBtn.onclick = async () => {
   currentWordIndex = 0;
   score = 0;
   updateLyricsDisplay();
+
+  typingInput.value = '';
+  typingInput.focus();
 
   typingInput.oninput = () => {
     const input = typingInput.value.trim();
