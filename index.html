@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Spotify Typing Game</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <h1>Spotify Lyric Typing Game</h1>
+  <button id="login">Connect to Spotify</button>
+  <div id="game" style="display:none;">
+    <select id="playlistSelect"></select>
+    <select id="trackSelect"></select>
+    <button id="startGame">Start Typing Game</button>
+    <div id="lyricsDisplay"></div>
+    <input type="text" id="typingInput" placeholder="Type lyrics here...">
+    <div id="score"></div>
+  </div>
+  <script src="https://sdk.scdn.co/spotify-player.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
