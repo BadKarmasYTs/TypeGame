@@ -2,16 +2,127 @@
 <html>
 <head>
   <title>Spotify Typing Game</title>
+  <style>
+    body {
+      background: #f5f7fa;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      display: flex; flex-direction: column; align-items: center; justify-content: flex-start;
+      min-height: 100vh;
+      padding: 20px;
+      color: #333;
+    }
+
+    #login {
+      background: #1db954;
+      border: none;
+      padding: 15px 30px;
+      color: white;
+      font-weight: bold;
+      font-size: 18px;
+      border-radius: 30px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+    #login:hover { background: #17a74a; }
+
+    #game {
+      margin-top: 20px;
+      width: 400px;
+      background: white;
+      border-radius: 15px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+      padding: 20px;
+      display: none;
+      flex-direction: column;
+      align-items: stretch;
+    }
+
+    select, button, input {
+      margin: 10px 0;
+      padding: 10px;
+      font-size: 16px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      outline: none;
+      transition: border-color 0.3s ease;
+    }
+    select:focus, button:focus, input:focus {
+      border-color: #1db954;
+    }
+
+    #startGame {
+      background: #1db954;
+      color: white;
+      font-weight: 600;
+      border: none;
+      cursor: pointer;
+      user-select: none;
+    }
+    #startGame:hover {
+      background: #17a74a;
+    }
+
+    #lyricsDisplay {
+      margin-top: 20px;
+      min-height: 120px;
+      background: #e9f5ea;
+      border-radius: 10px;
+      padding: 15px;
+      font-size: 20px;
+      font-weight: 600;
+      color: #1a1a1a;
+      user-select: none;
+      overflow-y: auto;
+      max-height: 150px;
+      line-height: 1.4;
+    }
+
+    #typingInput {
+      width: 100%;
+      font-size: 18px;
+      font-weight: 500;
+      border: 2px solid #ddd;
+      border-radius: 10px;
+      padding: 10px;
+      box-sizing: border-box;
+    }
+
+    #typingInput.correct {
+      border-color: #1db954;
+      background-color: #e2f7e7;
+    }
+    #typingInput.incorrect {
+      border-color: #e23e3e;
+      background-color: #f9e2e2;
+    }
+
+    #score {
+      margin-top: 15px;
+      font-size: 18px;
+      font-weight: 600;
+      text-align: right;
+      color: #1db954;
+    }
+
+    #countdown {
+      font-size: 24px;
+      font-weight: 700;
+      color: #1db954;
+      text-align: center;
+      margin-bottom: 10px;
+    }
+  </style>
 </head>
 <body>
   <button id="login">Connect to Spotify</button>
-  
-  <div id="game" style="display:none;">
-    <select id="playlistSelect"></select>
-    <select id="trackSelect"></select>
+
+  <div id="game">
+    <select id="playlistSelect"><option>Select Playlist</option></select>
+    <select id="trackSelect"><option>Select Track</option></select>
     <button id="startGame">Start Game</button>
+    <div id="countdown" style="display:none;"></div>
     <div id="lyricsDisplay"></div>
-    <input id="typingInput" type="text" placeholder="Type lyrics here">
+    <input id="typingInput" type="text" placeholder="Type the lyrics here..." disabled autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">
     <div id="score">Score: 0</div>
   </div>
 
