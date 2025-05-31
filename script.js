@@ -1,5 +1,5 @@
 const clientId = '6aea0f0190b4471eb3041d45e47adbcc';
-const redirectUri = 'https://badkarmasyts.github.io/TypeGame/';
+const redirectUri = 'https://badkarmasyts.github.io/TypeGame/callback.html';
 const scopes = 'user-read-private playlist-read-private streaming user-read-playback-state user-modify-playback-state';
 
 const loginButton = document.getElementById('login');
@@ -19,7 +19,7 @@ let currentTrackId = '';
 let lyricsData = [];
 
 loginButton.onclick = () => {
-  const authUrl = `https://accounts.spotify.com/authorize?client_id=${clientId}&response_type=token&redirect_uri=${encodeURIComponent(redirectUri)}&scope=${scopes}`;
+  const authUrl = `https://accounts.spotify.com/authorize?client_id=${clientId}&response_type=token&redirect_uri=${encodeURIComponent(redirectUri)}&scope=${encodeURIComponent(scopes)}`;
   window.location = authUrl;
 };
 
@@ -34,11 +34,10 @@ async function fetchSpotify(endpoint) {
 window.onSpotifyWebPlaybackSDKReady = () => {
   const token = localStorage.getItem("spotify_token");
   player = new Spotify.Player({
-    name: 'Web Playback SDK Quick Start Player',
+    name: 'Typing Game Player',
     getOAuthToken: cb => { cb(token); },
     volume: 0.5
   });
-
   player.connect();
 };
 
@@ -77,7 +76,7 @@ startGameBtn.onclick = async () => {
   const trackUri = track.uri;
 
   const token = localStorage.getItem("spotify_token");
-  const res = await fetch(`https://api.spotify.com/v1/me/player/play`, {
+  await fetch(`https://api.spotify.com/v1/me/player/play`, {
     method: 'PUT',
     headers: {
       Authorization: `Bearer ${token}`,
