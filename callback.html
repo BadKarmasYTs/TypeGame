@@ -1,20 +1,81 @@
 <!DOCTYPE html>
 <html>
-  <head><title>Spotify Callback</title></head>
-  <body>
-    <script>
-      // DEBUG - remove this line after verifying token is received
-      document.body.innerText = "Hash: " + window.location.hash;
+<head><title>Spotify Callback</title></head>
+<body>
+  <script>
+    async function parseQueryString(query) {
+      const params = new URLSearchParams(query);
+      return {
+        code: params.get('code'),
+        state: params.get('state'),
+        error: params.get('error')
+      };
+    }
 
-      const hash = window.location.hash.substring(1);
-      const params = new URLSearchParams(hash);
-      const accessToken = params.get("access_token");
-      if (accessToken) {
-        localStorage.setItem("spotify_token", accessToken);
-        window.location.href = "index.html";
-      } else {
-        document.body.innerText = "Failed to authenticate.";
+    async function sha256(plain) {
+      const encoder = new TextEncoder();
+      const data = encoder.encode(plain);
+      const hash = await crypto.subtle.digest('SHA-256', data);
+      return new Uint8Array(hash);
+    }
+
+    function base64UrlEncode(array) {
+      return btoa(String.fromCharCode.apply(null, array))
+        .replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+    }
+
+    async function main() {
+      const { code, state, error } = await parseQueryString(window.location.search);
+      if (error) {
+        document.body.innerText = 'Spotify authorization error: ' + error;
+        return;
       }
-    </script>
-  </body>
+      if (!code) {
+        document.body.innerText = 'No code found in URL.';
+        return;
+      }
+      const storedState = localStorage.getItem('spotify_auth_state');
+      if (state !== storedState) {
+        document.body.innerText = 'State mismatch. Possible CSRF attack.';
+        return;
+      }
+
+      const codeVerifier = localStorage.getItem('spotify_code_verifier');
+      if (!codeVerifier) {
+        document.body.innerText = 'Code verifier not found.';
+        return;
+      }
+
+      // Exchange code for token
+      const params = new URLSearchParams();
+      params.append('client_id', '6aea0f0190b4471eb3041d45e47adbcc');
+      params.append('grant_type', 'authorization_code');
+      params.append('code', code);
+      params.append('redirect_uri', 'https://badkarmasyts.github.io/TypeGame/callback.html');
+      params.append('code_verifier', codeVerifier);
+
+      try {
+        const res = await fetch('https://accounts.spotify.com/api/token', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+          body: params.toString()
+        });
+        const data = await res.json();
+        if (data.error) {
+          document.body.innerText = 'Token exchange error: ' + data.error_description;
+          return;
+        }
+        localStorage.setItem('spotify_access_token', data.access_token);
+        localStorage.setItem('spotify_refresh_token', data.refresh_token);
+        localStorage.removeItem('spotify_code_verifier');
+        localStorage.removeItem('spotify_auth_state');
+        window.location.href = 'index.html';
+      } catch (e) {
+        document.body.innerText = 'Fetch error: ' + e;
+      }
+    }
+
+    main();
+  </script>
+</body>
 </html>
