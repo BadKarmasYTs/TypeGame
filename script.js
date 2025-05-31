@@ -1,4 +1,4 @@
-const clientId = 'YOUR_CLIENT_ID';
+const clientId = '6aea0f0190b4471eb3041d45e47adbcc';
 const redirectUri = 'https://badkarmasyts.github.io/TypeGame/';
 const scopes = 'user-read-private playlist-read-private streaming user-read-playback-state user-modify-playback-state';
 
