@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html>
+<body>
+<script>
+  const hash = window.location.hash.substring(1);
+  const params = new URLSearchParams(hash);
+  const accessToken = params.get("access_token");
+  localStorage.setItem("spotify_token", accessToken);
+  window.location.href = "index.html";
+</script>
+</body>
+</html>
